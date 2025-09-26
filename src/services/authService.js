@@ -1,7 +1,7 @@
 // Dependências
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const Users = require("../models/UsersModel"); // Model
+const Usuarios = require("../models/UsuariosModel"); // Model
 const ProfilesEnums = require("../enums/profiles.enum"); // ENUMs
 const ViewingPermissionEnums = require("../enums/viewingPermission.enum");
 
@@ -46,12 +46,12 @@ const decryptToken = (token) => {
 
 // Registrar Administrador
 const registerAdministrator = async ({ name, document, password, plan, plan_plus, number_available_processes }) => {
-    const userExists = await Users.findOne({ where: { document } });
+    const userExists = await Usuarios.findOne({ where: { document } });
     if (userExists) throw new Error("CPF/CNPJ já cadastrado!");
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    await Users.create({
+    await Usuarios.create({
         name,
         document,
         password: hashedPassword,
@@ -60,7 +60,7 @@ const registerAdministrator = async ({ name, document, password, plan, plan_plus
         plan,
         plan_plus,
         number_available_processes,
-        profile: ProfilesEnums.ADMINISTRATOR,
+        profile: ProfilesEnums.ADMINISTRADOR,
         viewing_permission: [ViewingPermissionEnums.ALL],
         company_document: null,
         user_activated: true
@@ -69,7 +69,7 @@ const registerAdministrator = async ({ name, document, password, plan, plan_plus
 
 // Login de Usuário
 const login = async ({ document, password }) => {
-    const user = await Users.findOne({ where: { document } });
+    const user = await Usuarios.findOne({ where: { document } });
     if (!user) throw new Error("Credenciais inválidas!");
 
     const isMatch = await bcrypt.compare(password, user.password);

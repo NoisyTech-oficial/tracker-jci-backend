@@ -1,6 +1,6 @@
 const ProfilesEnums = {
-    ADMINISTRATOR: "ADMINISTRADOR",
-    EMPLOYEE: "FUNCIONARIO",
+    ADMINISTRADOR: "ADMINISTRADOR",
+    FUNCIONARIO: "FUNCIONARIO",
 };
 
 module.exports = ProfilesEnums;

@@ -3,19 +3,16 @@ const sequelize = require("./database");
 const { setAssociations } = require("../models/Associate");
 
 // Importa os modelos para que sejam definidos e registrados
-require("../models/ProcessDetailsModel");
-require("../models/ProcessesModel");
-require("../models/CepModel");
-require("../models/ProcessesObtainedModel");
-require("../models/UsersModel");
-require("../models/BanksModel");
+require("../models/AdvogadoModel");
+require("../models/DocumentosProcessoModel");
+require("../models/LeadsModel");
+require("../models/StatusLeadModel");
+require("../models/UsuariosModel");
 
 async function initDatabase() {
-  // Configura as associações
-  setAssociations();
-
   // Sincroniza o banco de dados (altere as opções conforme sua necessidade)
   try {
+    setAssociations();
     await sequelize.sync({ alter: true });
     console.log("📦 Banco de dados sincronizado e atualizado!");
   } catch (error) {

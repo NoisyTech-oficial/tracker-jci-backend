@@ -6,9 +6,6 @@ const authRoutes = require("./routes/authRoutes");
 const userRoutes = require("./routes/userRoutes");
 const administratorRoutes = require("./routes/administratorRoutes");
 const employeeRoutes = require("./routes/employeeRoutes");
-const processesRoutes = require("./routes/processesRoutes");
-const generalDataRoutes = require("./routes/generalDataRoutes");
-const processesObtainedRoutes = require("./routes/processesObtainedRoutes");
 
 // Services
 const { verifyToken } = require("./services/authService");
@@ -58,9 +55,6 @@ app.use("/api", verifyToken, [
   userRoutes,
   administratorRoutes,
   employeeRoutes,
-  processesRoutes,
-  generalDataRoutes,
-  processesObtainedRoutes,
 ]);
 
 setupMiddlewares(app);

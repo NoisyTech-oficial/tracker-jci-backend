@@ -1,11 +1,11 @@
 const bcrypt = require("bcryptjs");
-const Users = require("../models/UsersModel");
+const Usuarios = require("../models/UsuariosModel");
 const authService = require("./authService");
 const ProfilesEnums = require("../enums/profiles.enum");
 
 const getEmployeesByCompanyDocument = async (req) => {
     const document = req.user.documentCompany ?? req.user.document;
-    return await Users.findAll({
+    return await Usuarios.findAll({
         where: {
             company_document: document,
             profile: ProfilesEnums.EMPLOYEE
@@ -18,13 +18,13 @@ const getEmployeesByCompanyDocument = async (req) => {
 const registerEmployee = async (req) => {
     const { document, password, viewing_permission } = req.body;
 
-    const userExists = await Users.findOne({ where: { document } });
+    const userExists = await Usuarios.findOne({ where: { document } });
     if (userExists) throw new Error("CPF/CNPJ já cadastrado!");
 
     const hashedPassword = await bcrypt.hash(password, 10);
     const tokenData = authService.decryptToken(req.header("Authorization"));
 
-    await Users.create({
+    await Usuarios.create({
         name: null,
         document,
         password: hashedPassword,
@@ -43,7 +43,7 @@ const registerEmployee = async (req) => {
 // Alterar Visualizacao Funcionario
 const updateViewingPermission = async (companyDocument, documentEmployee, viewingPermission) => {
     try {
-        const employee = await Users.findOne({ 
+        const employee = await Usuarios.findOne({ 
             where: {
                 document: documentEmployee, 
                 company_document: companyDocument 
@@ -58,7 +58,7 @@ const updateViewingPermission = async (companyDocument, documentEmployee, viewin
             throw new Error("O campo 'viewing_permission' deve ser um array não vazio.");
         }
 
-        await Users.update(
+        await Usuarios.update(
             { 
                 viewing_permission: viewingPermission, 
                 updatedAt: new Date() 
@@ -79,7 +79,7 @@ const updateViewingPermission = async (companyDocument, documentEmployee, viewin
 // Deletar Funcionario
 const deleteEmployee = async (documentEmployee, companyDocument) => {
     try {
-        const employee = await Users.findOne({ 
+        const employee = await Usuarios.findOne({ 
             where: { 
                 document: documentEmployee, 
                 company_document: companyDocument 

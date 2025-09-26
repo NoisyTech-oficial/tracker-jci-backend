@@ -1,5 +1,5 @@
 const bcrypt = require("bcryptjs");
-const Users = require("../models/UsersModel");
+const Usuarios = require("../models/UsuariosModel");
 const authService = require("../services/authService");
 
 const changePassword = async (token, oldPassword, newPassword) => {
@@ -8,7 +8,7 @@ const changePassword = async (token, oldPassword, newPassword) => {
         const decoded = authService.decryptToken(token, process.env.JWT_SECRET);
         
         // Busca o usuário pelo CPF/CNPJ armazenado no token
-        const user = await Users.findOne({ where: { document: decoded.document } });
+        const user = await Usuarios.findOne({ where: { document: decoded.document } });
         if (!user) throw new Error("Usuário não encontrado!");
 
         if (oldPassword) {
@@ -34,7 +34,7 @@ const updateUserData = async (req) => {
         const document = decoded.document;
         const updateData = req.body;
 
-        const user = await Users.findOne({ where: { document } });
+        const user = await Usuarios.findOne({ where: { document } });
         if (!user) {
             throw new Error("Usuário não encontrado!");
         }
@@ -69,7 +69,7 @@ const getUserByDocument = async (req) => {
     const tokenData = authService.decryptToken(req.header("Authorization"));
     const document = tokenData.document;
 
-    return await Users.findOne({
+    return await Usuarios.findOne({
         where: { document },
         attributes: ['name', 'document', 'plan', 'plan_plus', 'first_access', 'profile', 'viewing_permission', 'company_document', 'user_activated']
     });
