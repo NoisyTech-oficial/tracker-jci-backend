@@ -3,9 +3,10 @@ const express = require("express");
 
 // Rotas
 const authRoutes = require("./routes/authRoutes");
-const userRoutes = require("./routes/userRoutes");
+const usuarioRoutes = require("./routes/usuarioRoutes");
 const administratorRoutes = require("./routes/administratorRoutes");
-const employeeRoutes = require("./routes/employeeRoutes");
+const funcionarioRoutes = require("./routes/funcionarioRoutes");
+const statusLeadRoutes = require("./routes/statusLeadRoutes");
 
 // Services
 const { verifyToken } = require("./services/authService");
@@ -52,9 +53,10 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // Rotas
 app.use("/api/auth", authRoutes);
 app.use("/api", verifyToken, [
-  userRoutes,
+  usuarioRoutes,
   administratorRoutes,
-  employeeRoutes,
+  funcionarioRoutes,
+  statusLeadRoutes
 ]);
 
 setupMiddlewares(app);

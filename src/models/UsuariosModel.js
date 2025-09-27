@@ -2,8 +2,8 @@ const { Sequelize, DataTypes } = require("sequelize");
 const sequelize = require("../config/database");
 
 // Enums traduzidos
-const PerfisEnums = require("../enums/profiles.enum");
-const PermissoesVisualizacaoEnums = require("../enums/viewingPermission.enum");
+const PerfisEnums = require("../enums/perfis.enum");
+const PermissoesVisualizacaoEnums = require("../enums/permissaoVisualizacao.enum");
 
 const Usuarios = sequelize.define("usuarios", {
     id: {

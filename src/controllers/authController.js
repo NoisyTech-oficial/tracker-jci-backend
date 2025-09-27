@@ -1,9 +1,9 @@
 const authService = require("../services/authService");
-const ProfilesEnums = require("../enums/profiles.enum");
+const PerfisEnums = require("../enums/perfis.enum");
 
-const registerAdministrator = async (req, res) => {
+const cadastrarAdministrador = async (req, res) => {
     try {
-        await authService.registerAdministrator(req.body, ProfilesEnums.ADMINISTRADOR);
+        await authService.cadastrarAdministrador(req.body, PerfisEnums.ADMINISTRADOR);
         res.status(201).json({ message: "Usuário registrado com sucesso!" });
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -19,4 +19,4 @@ const login = async (req, res) => {
     }
 };
 
-module.exports = { registerAdministrator, login };
+module.exports = { cadastrarAdministrador, login };

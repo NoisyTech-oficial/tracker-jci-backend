@@ -2,19 +2,19 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const Usuarios = require("../models/UsuariosModel"); // Model
-const ProfilesEnums = require("../enums/profiles.enum"); // ENUMs
-const ViewingPermissionEnums = require("../enums/viewingPermission.enum");
+const PerfisEnums = require("../enums/perfis.enum"); // ENUMs
+const PermissaoVisualizacaoEnums = require("../enums/permissaoVisualizacao.enum");
 
 // Gerar Token JWT
-const generateToken = (user) => {
+const generateToken = (usuario) => {
     return jwt.sign(
         {
-            id: user.id,
-            document: user.document,
-            profile: user.profile,
-            plan: user.plan,
-            plan_plus: user.plan_plus,
-            documentCompany: user.profile === ProfilesEnums.EMPLOYEE ? user.company_document : null,
+            id: usuario.id,
+            document: usuario.document,
+            profile: usuario.profile,
+            plan: usuario.plan,
+            plan_plus: usuario.plan_plus,
+            documentCompany: usuario.profile === PerfisEnums.FUNCIONARIO ? usuario.company_document : null,
         },
         process.env.JWT_SECRET,
         { expiresIn: "1h" }
@@ -28,7 +28,7 @@ const verifyToken = (req, res, next) => {
 
     try {
         const decoded = jwt.verify(token.replace("Bearer ", ""), process.env.JWT_SECRET);
-        req.user = decoded;
+        req.usuario = decoded;
         next();
     } catch (error) {
         res.status(401).json({ message: "Token inválido!" });
@@ -45,9 +45,9 @@ const decryptToken = (token) => {
 };
 
 // Registrar Administrador
-const registerAdministrator = async ({ name, document, password, plan, plan_plus, number_available_processes }) => {
-    const userExists = await Usuarios.findOne({ where: { document } });
-    if (userExists) throw new Error("CPF/CNPJ já cadastrado!");
+const cadastrarAdministrador = async ({ name, document, password, plan, plan_plus, number_available_processes }) => {
+    const usuarioExists = await Usuarios.findOne({ where: { document } });
+    if (usuarioExists) throw new Error("CPF/CNPJ já cadastrado!");
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -60,22 +60,22 @@ const registerAdministrator = async ({ name, document, password, plan, plan_plus
         plan,
         plan_plus,
         number_available_processes,
-        profile: ProfilesEnums.ADMINISTRADOR,
-        viewing_permission: [ViewingPermissionEnums.ALL],
+        profile: PerfisEnums.ADMINISTRADOR,
+        viewing_permission: [PermissaoVisualizacaoEnums.TOTAL],
         company_document: null,
-        user_activated: true
+        usuario_activated: true
     });
 };
 
 // Login de Usuário
 const login = async ({ document, password }) => {
-    const user = await Usuarios.findOne({ where: { document } });
-    if (!user) throw new Error("Credenciais inválidas!");
+    const usuario = await Usuarios.findOne({ where: { document } });
+    if (!usuario) throw new Error("Credenciais inválidas!");
 
-    const isMatch = await bcrypt.compare(password, user.password);
+    const isMatch = await bcrypt.compare(password, usuario.password);
     if (!isMatch) throw new Error("Credenciais inválidas!");
 
-    return generateToken(user);
+    return generateToken(usuario);
 };
 
-module.exports = { generateToken, verifyToken, decryptToken, registerAdministrator, login };
+module.exports = { generateToken, verifyToken, decryptToken, cadastrarAdministrador, login };

@@ -1,6 +1,6 @@
-const ProfilesEnums = {
+const PerfisEnums = {
     ADMINISTRADOR: "ADMINISTRADOR",
     FUNCIONARIO: "FUNCIONARIO",
 };
 
-module.exports = ProfilesEnums;
+module.exports = PerfisEnums;

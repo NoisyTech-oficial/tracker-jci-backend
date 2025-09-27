@@ -1,18 +1,17 @@
 const express = require("express");
 const { check } = require("express-validator");
-const { registerAdministrator, login } = require("../controllers/authController");
-const PlansEnums = require("../enums/plans.enum");
+const { cadastrarAdministrador, login } = require("../controllers/authController");
 
 const router = express.Router();
 
 /**
  * @swagger
- * /api/auth/register-administrator:
+ * /api/auth/cadastrar-administrador:
  *   post:
  *     summary: Cadastrar uma nova empresa no sistema
  *     description: Cria uma nova empresa no sistema com o perfil de administrador
  *     tags:
- *       - Registro e Autenticacao
+ *       - Registro e Autenticação
  *     requestBody:
  *       required: true
  *       content:
@@ -20,37 +19,37 @@ const router = express.Router();
  *           schema:
  *             type: object
  *             required:
- *               - name
- *               - document
- *               - password
- *               - agree_terms
- *               - plan
- *               - plan_plus
+ *               - nome
+ *               - documento
+ *               - senha
+ *               - aceitou_termos
+ *               - plano
+ *               - plano_plus
  *             properties:
- *               name:
+ *               nome:
  *                 type: string
  *                 description: Nome do administrador ou empresa
  *                 example: Patmos
- *               document:
+ *               documento:
  *                 type: string
  *                 description: CPF ou CNPJ do administrador
  *                 example: 37702561000145
- *               password:
+ *               senha:
  *                 type: string
  *                 description: Senha do administrador
  *                 example: Teste123
- *               agree_terms:
+ *               aceitou_termos:
  *                 type: boolean
  *                 description: Confirmação de concordância com os termos de privacidade
  *                 example: true
- *               plan:
+ *               plano:
  *                 type: string
  *                 description: Plano escolhido pelo administrador (BASICO, INTERMEDIARIO, PREMIUM)
  *                 enum: [BASICO, INTERMEDIARIO, PREMIUM]
  *                 example: PREMIUM
- *               plan_plus:
+ *               plano_plus:
  *                 type: boolean
- *                 description: Se o plano do cliente é plan_plus ou não
+ *                 description: Se o plano do cliente é Plus ou não
  *                 example: true
  *     responses:
  *       201:
@@ -60,12 +59,10 @@ const router = express.Router();
  *       500:
  *         description: Erro interno no servidor
  */
-router.post("/register-administrator", [
-    check("document", "CPF/CNPJ é obrigatório").not().isEmpty(),
-    check("plan", "Plano deve ser Basico, Intermediario ou Premium").isIn([PlansEnums.BASIC, PlansEnums.INTERMEDIARY, PlansEnums.PREMIUM]),
-    check("password", "A senha deve ter pelo menos 8 caracteres").isLength({ min: 8 }),
-    check("plan_plus", "Deve informar se o plano é Plus").not().isEmpty(),
-], registerAdministrator);
+router.post("/cadastrar-administrador", [
+    check("documento", "CPF/CNPJ é obrigatório").not().isEmpty(),
+    check("senha", "A senha deve ter pelo menos 8 caracteres").isLength({ min: 8 }),
+], cadastrarAdministrador);
 
 
 /**
@@ -75,7 +72,7 @@ router.post("/register-administrator", [
  *     summary: Login do usuário no sistema
  *     description: Realiza o login do usuário no sistema
  *     tags:
- *       - Registro e Autenticacao
+ *       - Registro e Autenticação
  *     requestBody:
  *       required: true
  *       content:
@@ -83,20 +80,20 @@ router.post("/register-administrator", [
  *           schema:
  *             type: object
  *             required:
- *               - document
- *               - password
+ *               - documento
+ *               - senha
  *             properties:
- *               document:
+ *               documento:
  *                 type: string
  *                 description: CPF ou CNPJ do usuário
  *                 example: 37702561000145
- *               password:
+ *               senha:
  *                 type: string
  *                 description: Senha do usuário   
  *                 example: Teste123
  *     responses:
  *       200:
- *         description: Empresa cadastrada com sucesso
+ *         description: Login realizado com sucesso
  *         content:
  *           application/json:
  *             schema:
@@ -106,15 +103,14 @@ router.post("/register-administrator", [
  *                   type: string
  *                   description: Token JWT para autenticação
  *                   example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZG9jdW1lbnQiOiIzNzcwMjU2MTAwMDE0NSIsImlhdCI6MTczOTIxOTc0MywiZXhwIjoxNzM5MjIzMzQzfQ.PMSOv30Mc4GIR7DCJDhfrNcAaSMJMKaL9kVqxmpt2qs
-
  *       400:
  *         description: Erro ao efetuar login
  *       500:
  *         description: Erro interno no servidor
  */
 router.post("/login", [
-    check("document", "CPF/CNPJ é obrigatório").not().isEmpty(),
-    check("password", "Senha é obrigatória").exists()
+    check("documento", "CPF/CNPJ é obrigatório").not().isEmpty(),
+    check("senha", "Senha é obrigatória").exists()
 ], login);
 
 module.exports = router;

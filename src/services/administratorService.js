@@ -4,4 +4,4 @@
 //CODIGO AQUI
 
 
-module.exports = { changePassword, getUserByDocument, getEmployeesByCompanyDocument };
+module.exports = { changePassword, getUsuarioByDocument, getFuncionariosByCompanyDocument };

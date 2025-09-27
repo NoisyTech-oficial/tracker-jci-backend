@@ -4,4 +4,4 @@
 //CODIGO AQUI
 
 
-module.exports = { registerAdministrator, login };
+module.exports = { cadastrarAdministrador, login };
